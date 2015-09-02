@@ -1,0 +1,131 @@
+#pragma once
+
+#include "resource.h"
+#include "event.h"
+#include "popup_tooltip_message.h"
+#include "date_time_event_s11n_block.h"
+
+class DateTimeEvent : public Event
+{
+public:
+	DateTimeEvent();
+
+	enum EType
+	{
+		typeOnce, typeDaily, typeWeekly
+	};
+
+	enum EFinalAction
+	{
+		finalActionRemove,
+		finalActionDisable
+	};
+
+	enum EDay
+	{
+		dayMon = 0x01, dayTue = 0x02, dayWed = 0x04, dayThu = 0x08,
+		dayFri = 0x10, daySat = 0x20, daySun = 0x40
+	};
+
+	std::wstring GetTitle() const;
+	void SetTitle(const std::wstring& title);
+
+	EType GetType() const;
+	void SetType(EType val);
+
+	boost::gregorian::date GetDate() const;
+	void SetDate(const boost::gregorian::date& val);
+
+	EFinalAction GetFinalAction() const;
+	void SetFinalAction(EFinalAction val);
+
+	char GetWeekDays() const;
+	void SetWeekDays(char val);
+
+	boost::posix_time::time_duration GetTime() const;
+	void SetTime(const boost::posix_time::time_duration& val);
+
+	bool GetWakeup() const;
+	void SetWakeup(bool val);
+
+public: // Event
+	virtual GUID GetPrototypeGUID() const;
+	virtual int GetPriority() const;
+	virtual std::wstring GetName() const;
+	virtual std::wstring GetDescription() const;
+	virtual bool ShowConfigDialog(CWindow parent, class PrefPageModel* pPrefPageModel);
+	virtual void OnSignal();
+	virtual Event* Clone() const;
+	virtual Event* CreateFromPrototype() const;
+	virtual void LoadFromS11nBlock(const EventS11nBlock& block);
+	virtual void SaveToS11nBlock(EventS11nBlock& block) const;
+
+private:
+	DateTimeEvent(const DateTimeEvent& rhs);
+
+	std::wstring GetTimeDescription() const;
+	std::wstring GetDateDescription() const;
+
+	std::wstring GetDailyDescription() const;
+	std::wstring GetWeeklyDescription() const;
+	std::wstring GetOnceDescription() const;
+	void AddWakeUp(std::wstring& strResult) const;
+
+private:
+	std::wstring m_title;
+	EType m_type;
+	boost::gregorian::date m_date;
+	EFinalAction m_finalAction;
+	char m_weekDays;
+	boost::posix_time::time_duration m_time;
+	bool m_wakeup;
+};
+
+class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>
+{
+public:
+	enum { IDD = IDD_DATETIME_EVENT_CONFIG };
+
+	DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* pPrefPageModel);
+
+private:
+	BEGIN_MSG_MAP(DateTimeEventEditor)
+		MSG_WM_INITDIALOG(OnInitDialog)
+
+		COMMAND_HANDLER_EX(IDC_COMBO_DAY, CBN_SELCHANGE, OnDayTypeSelChange)
+
+		COMMAND_ID_HANDLER_EX(IDOK, OnClose)
+		COMMAND_ID_HANDLER_EX(IDCANCEL, OnClose)
+	END_MSG_MAP()
+
+	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
+	void OnClose(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+	void OnDayTypeSelChange(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+private:
+	void InitTime();
+	void InitDate();
+	void InitWeekDays();
+	
+	void CreateWeekDaysControl();
+	void UpdateDayControls();
+
+	char GetWeekDays() const;
+	boost::gregorian::date GetDate() const;
+	boost::posix_time::time_duration GetTime() const;
+
+	bool OnceDateTimeEventExpired() const;
+
+private:
+	DateTimeEvent* m_pEvent;
+	PrefPageModel* m_pPrefPageModel;
+
+	CComboBox m_typeCombo;
+	CComboBox m_finalActionCombo;
+	CCheckListViewCtrl m_weekDays;
+	CDateTimePickerCtrl m_date;
+	CDateTimePickerCtrl m_time;
+
+	mutable PopupTooltipMessage m_popupTooltipMsg;
+};

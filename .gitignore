@@ -1,0 +1,13 @@
+*.ncb
+*.sdf
+*.opensdf
+*.suo
+*.user
+*.aps
+
+/build/
+/foobar2000/
+/libs/
+/tools/
+/src/ipch/
+
