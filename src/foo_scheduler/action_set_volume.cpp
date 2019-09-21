@@ -234,7 +234,7 @@ void ActionSetVolume::ExecSession::RunWithFade()
 	}
 
 	static_api_ptr_t<playback_control> pc;
-	m_secondsLeft = fadeDuration.total_seconds();
+	m_secondsLeft = static_cast<int>(fadeDuration.total_seconds());
 
 	float startPower = std::powf(10.0f, pc->get_volume() / 20.0f);
 	float endPower = std::powf(10.0f, m_action.GetVolume() / 20.0f);

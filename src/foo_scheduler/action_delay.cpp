@@ -134,7 +134,7 @@ void ActionDelay::ExecSession::Run(const AsyncCall::CallbackPtr& completionCall)
 		break;
 	}
 
-	m_secondsLeft = duration.total_seconds();
+	m_secondsLeft = static_cast<int>(duration.total_seconds());
 
 	m_timerID = ServiceManager::Instance().GetTimersManager().CreateTimer(
 		boost::posix_time::second_clock::local_time() + boost::posix_time::seconds(1), boost::posix_time::seconds(1), false);

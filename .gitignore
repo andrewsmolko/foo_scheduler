@@ -10,4 +10,5 @@
 /libs/
 /tools/
 /src/ipch/
-
+/src/.vs/
+/releases/
