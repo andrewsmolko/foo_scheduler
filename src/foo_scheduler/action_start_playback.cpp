@@ -2,6 +2,8 @@
 #include "action_start_playback.h"
 #include "service_manager.h"
 #include "action_start_playback_s11n_block.h"
+#include "action_save_playback_state.h"
+#include "scope_exit_function.h"
 
 //------------------------------------------------------------------------------
 // ActionStartPlayback
@@ -24,10 +26,19 @@ std::wstring ActionStartPlayback::GetDescription() const
 {
 	std::wstring strResult = L"Start playback";
 
-	if (m_playbackStartType == startTypeFromTrack)
-		strResult += L" from track #" + boost::lexical_cast<std::wstring>(m_startTrackNumber);
+    switch (m_playbackStartType)
+    {
+    case startTypeOrdinary:
+        break;
+    case startTypeFromTrack:
+        strResult += L" from track #" + boost::lexical_cast<std::wstring>(m_startTrackNumber);
+        break;
+    case startTypeFromSavedState:
+        strResult += L" from saved state";
+        break;
+    }
 
-	return strResult;
+    return strResult;
 }
 
 IAction* ActionStartPlayback::Clone() const
@@ -131,10 +142,12 @@ ActionStartPlayback::ExecSession::ExecSession(const ActionStartPlayback& action)
 
 void ActionStartPlayback::ExecSession::Run(const AsyncCall::CallbackPtr& completionCall)
 {
+    ScopeExitFunction scopeExit(boost::bind(&AsyncCall::AsyncRunInMainThread, completionCall));
+
+    static_api_ptr_t<playlist_manager> pm;
+
 	if (m_action.GetStartPlaybackType() == startTypeFromTrack)
 	{
-		static_api_ptr_t<playlist_manager> pm;
-
 		t_size playlist = pm->get_active_playlist();
 
 		if (playlist == pfc::infinite_size)
@@ -143,14 +156,67 @@ void ActionStartPlayback::ExecSession::Run(const AsyncCall::CallbackPtr& complet
 		pm->queue_flush();
 		pm->queue_add_item_playlist(playlist, m_action.GetStartTrackNumber() - 1);
 	}
+    else if (m_action.GetStartPlaybackType() == startTypeFromSavedState)
+    {
+        const boost::any playlistAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetPlaylistKey());
+        const boost::any trackAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetTrackKey());
+
+        const t_size* playlist = boost::any_cast<t_size>(&playlistAny);
+        const t_size* track = boost::any_cast<t_size>(&trackAny);
+
+        if (!playlist || !track)
+            return;
+       
+        pm->queue_flush();
+        pm->queue_add_item_playlist(*playlist, *track);
+    }
 
 	static_api_ptr_t<playback_control> pc;
 
-	ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
-	pc->start();
-	ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(false);
+	if (m_action.GetStartPlaybackType() != startTypeFromSavedState)
+	{
+		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
+		pc->start();
+		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(false);
+	}
+	else
+	{
+		static_api_ptr_t<play_callback_manager>()->register_callback(this,
+			flag_on_playback_new_track, false);
+		m_completionCall = completionCall;
 
-	AsyncCall::AsyncRunInMainThread(completionCall);
+		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
+		pc->start(playback_control::track_command_play, true);
+
+        scopeExit.Clear();
+	}
+}
+
+void ActionStartPlayback::ExecSession::on_playback_new_track(metadb_handle_ptr p_track)
+{
+	AsyncCall::AsyncRunInMainThread(AsyncCall::MakeCallback<ActionStartPlayback::ExecSession>(
+		shared_from_this(),
+		[this] (ActionStartPlayback::ExecSession*)
+		{
+			static_api_ptr_t<play_callback_manager>()->unregister_callback(this);
+			
+			static_api_ptr_t<playback_control> pc;
+
+			const boost::any positionAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetPositionKey());
+			if (const double* position = boost::any_cast<double>(&positionAny))
+			{
+				pc->playback_seek(*position);
+			}
+
+			// We started playback in paused state, see above.
+			pc->pause(false);
+
+			ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(false);
+
+			_ASSERTE(m_completionCall);
+			AsyncCall::AsyncRunInMainThread(m_completionCall);
+		}
+	));
 }
 
 const IAction* ActionStartPlayback::ExecSession::GetParentAction() const
@@ -158,8 +224,9 @@ const IAction* ActionStartPlayback::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionStartPlayback::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionStartPlayback::ExecSession::Init(IActionListExecSessionFuncs& alesFuncs)
 {
+    m_alesFuncs = &alesFuncs;
 }
 
 bool ActionStartPlayback::ExecSession::GetCurrentStateDescription(std::wstring& /*descr*/) const
@@ -198,9 +265,9 @@ void ActionStartPlaybackEditor::OnCloseCmd(UINT uNotifyCode, int nID, CWindow wn
 			return;
 
 		ActionStartPlayback::EStartType startType = static_cast<ActionStartPlayback::EStartType>(m_playbackStartType);
-		t_uint32 track = 0;
+		t_uint32 track = 1;
 
-		if (startType == ActionStartPlayback::startTypeFromTrack)
+        if (startType == ActionStartPlayback::startTypeFromTrack)
 		{
 			CString s;
 			GetDlgItemText(IDC_EDIT_TRACK_NO, s);
@@ -218,8 +285,6 @@ void ActionStartPlaybackEditor::OnCloseCmd(UINT uNotifyCode, int nID, CWindow wn
 				return;
 			}
 		}
-		else
-			track = 1;
 
 		m_pAction->SetStartPlaybackType(startType);
 		m_pAction->SetStartTrackNumber(track);

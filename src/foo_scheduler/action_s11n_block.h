@@ -16,6 +16,7 @@
 #include "action_next_track_s11n_block.h"
 #include "action_prev_track_s11n_block.h"
 #include "action_wait_n_tracks_played_s11n_block.h"
+#include "action_save_playback_state_s11n_block.h"
 
 struct ActionS11nBlock : public S11nBlocks::Block<ActionS11nBlock>
 {
@@ -35,12 +36,13 @@ struct ActionS11nBlock : public S11nBlocks::Block<ActionS11nBlock>
 	S11nBlocks::Field<ActionNextTrackS11nBlock, 13>       nextTrack;
 	S11nBlocks::Field<ActionPrevTrackS11nBlock, 14>       prevTrack;
 	S11nBlocks::Field<ActionWaitNTracksPlayedS11nBlock, 15> waitNTracksPlayed;
+    S11nBlocks::Field<ActionSavePlaybackStateS11nBlock, 16> savePlaybackState;
 
 	template<class Archive>
 	void RegisterFields(Archive& ar)
 	{
-		ar.RegisterFields(actionGUID)(startPlayback)(stopPlayback)(pausePlayback)
-			(exitFoobar)(shutdown)(changePlaylist)(setPlaybackOrder)(delay)(setVolume)(launchApp)
-			(toggleMute)(nextTrack)(prevTrack)(waitNTracksPlayed);
+        ar.RegisterFields(actionGUID)(startPlayback)(stopPlayback)(pausePlayback)
+            (exitFoobar)(shutdown)(changePlaylist)(setPlaybackOrder)(delay)(setVolume)(launchApp)
+            (toggleMute)(nextTrack)(prevTrack)(waitNTracksPlayed)(savePlaybackState);
 	}
 };

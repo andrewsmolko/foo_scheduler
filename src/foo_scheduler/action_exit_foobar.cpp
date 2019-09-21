@@ -87,7 +87,7 @@ const IAction* ActionExitFoobar::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionExitFoobar::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionExitFoobar::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

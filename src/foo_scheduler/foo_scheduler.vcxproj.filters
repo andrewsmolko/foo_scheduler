@@ -66,6 +66,9 @@
     <Filter Include="Source Files\actions\wait_n_tracks_played_27">
       <UniqueIdentifier>{d3c84986-fc56-4f7a-8867-d628232ba5f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\actions\save_playback_state_45">
+      <UniqueIdentifier>{73d9256e-3fb0-4035-b8cd-22ea55868d96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.h">
@@ -275,6 +278,18 @@
     <ClInclude Include="header_static.h">
       <Filter>Source Files\ui_helpers</Filter>
     </ClInclude>
+    <ClInclude Include="action_save_playback_state.h">
+      <Filter>Source Files\actions\save_playback_state_45</Filter>
+    </ClInclude>
+    <ClInclude Include="action_save_playback_state_s11n_block.h">
+      <Filter>Source Files\actions\save_playback_state_45</Filter>
+    </ClInclude>
+    <ClInclude Include="event_visitor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generate_duplicate_name.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action_list.cpp">
@@ -390,6 +405,9 @@
     </ClCompile>
     <ClCompile Include="header_static.cpp">
       <Filter>Source Files\ui_helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="action_save_playback_state.cpp">
+      <Filter>Source Files\actions\save_playback_state_45</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

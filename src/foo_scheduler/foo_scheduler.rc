@@ -82,10 +82,10 @@ BEGIN
     EDITTEXT        IDC_ACTION_LIST_NAME,78,11,129,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,56,36,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,110,36,50,14
-    LTEXT           "Action list's name:",IDC_STATIC,11,13,58,8
+    LTEXT           "Action list's name:",IDC_STATIC,11,13,64,8
 END
 
-IDD_ACTION_START_PLAYBACK_CONFIG DIALOGEX 0, 0, 190, 81
+IDD_ACTION_START_PLAYBACK_CONFIG DIALOGEX 0, 0, 191, 93
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Start playback"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
@@ -94,9 +94,11 @@ BEGIN
     CONTROL         "Start playback from track",IDC_RADIO_START_FROM_TRACK,
                     "Button",BS_AUTORADIOBUTTON,11,23,96,10
     EDITTEXT        IDC_EDIT_TRACK_NO,22,36,47,13,ES_AUTOHSCROLL | ES_NUMBER
-    PUSHBUTTON      "Pick current track number",IDC_BTN_PICK_CURRENT_TRACK,75,35,104,14
-    DEFPUSHBUTTON   "OK",IDOK,42,60,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,96,60,50,14
+    PUSHBUTTON      "Pick current track number",IDC_BTN_PICK_CURRENT_TRACK,76,35,104,14
+    DEFPUSHBUTTON   "OK",IDOK,42,72,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,96,72,50,14
+    CONTROL         "Start playback from saved state",IDC_RADIO_START_FROM_SAVED_STATE,
+                    "Button",BS_AUTORADIOBUTTON,11,53,169,10
 END
 
 IDD_PLAYER_EVENT_CONFIG DIALOGEX 0, 0, 179, 115
@@ -267,9 +269,9 @@ BEGIN
     IDD_ACTION_START_PLAYBACK_CONFIG, DIALOG
     BEGIN
         LEFTMARGIN, 11
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 180
         TOPMARGIN, 11
-        BOTTOMMARGIN, 74
+        BOTTOMMARGIN, 86
     END
 
     IDD_PLAYER_EVENT_CONFIG, DIALOG
@@ -390,7 +392,23 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ACTION_LIST_CONFIG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ACTION_START_PLAYBACK_CONFIG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

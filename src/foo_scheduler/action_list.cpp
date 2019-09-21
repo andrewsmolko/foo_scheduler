@@ -9,7 +9,7 @@
 
 ActionList::ActionList()
 {
-	::UuidCreate(&m_guid);
+	CreateGUID();
 }
 
 ActionList::ActionList(const ActionList& rhs) :
@@ -17,6 +17,11 @@ ActionList::ActionList(const ActionList& rhs) :
 	m_name(rhs.m_name),
 	m_actions(rhs.m_actions)
 {
+}
+
+void ActionList::CreateGUID()
+{
+	::UuidCreate(&m_guid);
 }
 
 bool ActionList::ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageModel)
@@ -56,6 +61,14 @@ ActionList* ActionList::Clone() const
 {
 	return new ActionList(*this);
 }
+
+std::unique_ptr<ActionList> ActionList::Duplicate(const std::wstring &newName) const
+{
+	std::unique_ptr<ActionList> result(new ActionList(*this));
+    result->SetName(newName);
+	result->CreateGUID();
+	return result;
+} 
 
 ActionList::ActionsContainer::auto_type ActionList::RemoveAction(IAction* pAction)
 {

@@ -157,7 +157,7 @@ const IAction* ActionShutdown::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionShutdown::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionShutdown::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

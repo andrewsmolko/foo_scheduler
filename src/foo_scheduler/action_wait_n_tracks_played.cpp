@@ -111,9 +111,9 @@ const IAction* ActionWaitNTracksPlayed::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionWaitNTracksPlayed::ExecSession::Init(const boost::function<void ()>& updateALESDescriptionFunc)
+void ActionWaitNTracksPlayed::ExecSession::Init(IActionListExecSessionFuncs& alesFuncs)
 {
-	m_updateALESDescriptionFunc = updateALESDescriptionFunc;
+    m_alesFuncs = &alesFuncs;
 }
 
 bool ActionWaitNTracksPlayed::ExecSession::GetCurrentStateDescription(std::wstring& descr) const
@@ -141,7 +141,7 @@ void ActionWaitNTracksPlayed::ExecSession::on_playback_new_track(metadb_handle_p
 		AsyncCall::AsyncRunInMainThread(completionCall);
 	}
 
-	m_updateALESDescriptionFunc();
+    m_alesFuncs->UpdateDescription();
 }
 
 void ActionWaitNTracksPlayed::ExecSession::OnSessionCompleted()

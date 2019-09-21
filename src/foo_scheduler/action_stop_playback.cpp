@@ -91,7 +91,7 @@ const IAction* ActionStopPlayback::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionStopPlayback::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionStopPlayback::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

@@ -80,9 +80,9 @@ void DateTimeEvent::OnSignal()
 	}
 }
 
-Event* DateTimeEvent::Clone() const
+std::unique_ptr<Event> DateTimeEvent::Clone() const
 {
-	return new DateTimeEvent(*this);
+    return std::unique_ptr<Event>(new DateTimeEvent(*this));
 }
 
 std::wstring DateTimeEvent::GetTitle() const
@@ -143,6 +143,13 @@ bool DateTimeEvent::GetWakeup() const
 void DateTimeEvent::SetWakeup(bool val)
 {
 	m_wakeup = val;
+}
+
+std::unique_ptr<DateTimeEvent> DateTimeEvent::Duplicate(const std::wstring &newTitle) const
+{
+    std::unique_ptr<DateTimeEvent> result(new DateTimeEvent(*this));
+    result->SetTitle(newTitle);
+    return result;
 }
 
 std::wstring DateTimeEvent::GetDailyDescription() const
@@ -291,6 +298,11 @@ void DateTimeEvent::SaveToS11nBlock(EventS11nBlock& block) const
 	block.dateTimeEvent.SetValue(b);
 }
 
+void DateTimeEvent::ApplyVisitor(IEventVisitor& visitor)
+{
+    visitor.Visit(*this);
+}
+
 GUID DateTimeEvent::GetPrototypeGUID() const
 {
 	// {c46b3826-0bbf-4598-9593-53190bf7078c} 
@@ -315,7 +327,7 @@ void DateTimeEvent::SetFinalAction(EFinalAction val)
 	m_finalAction = val;
 }
 
-Event* DateTimeEvent::CreateFromPrototype() const
+std::unique_ptr<Event> DateTimeEvent::CreateFromPrototype() const
 {
 	return Clone();
 }

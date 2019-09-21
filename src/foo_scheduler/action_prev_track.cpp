@@ -91,7 +91,7 @@ const IAction* ActionPrevTrack::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionPrevTrack::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionPrevTrack::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

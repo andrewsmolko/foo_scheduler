@@ -20,6 +20,10 @@ public:
 
 	ActionList* Clone() const;
 
+	// Duplicate generates new guid,
+	// Clone is just a copy used for boost::ptr_vector
+	std::unique_ptr<ActionList> Duplicate(const std::wstring &newName) const;
+
 	const GUID& GetGUID() const;
 	std::wstring GetName() const;
 	std::wstring GetDescription() const;
@@ -41,7 +45,7 @@ public:
 
 private:
 	ActionList(const ActionList& rhs);
-
+	void CreateGUID();
 	friend class ActionListEditor;
 	void SetName(const std::wstring& name);
 

@@ -113,7 +113,7 @@ const IAction* ActionLaunchApp::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionLaunchApp::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionLaunchApp::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

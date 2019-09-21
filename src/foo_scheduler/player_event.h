@@ -78,16 +78,17 @@ namespace PlayerEventStopReason
 class PlayerEvent : public Event
 {
 public: // Event
-	virtual GUID GetPrototypeGUID() const;
-	virtual int GetPriority() const;
-	virtual std::wstring GetName() const;
-	virtual std::wstring GetDescription() const;
-	virtual bool ShowConfigDialog(CWindow parent, class PrefPageModel* pPrefPageModel);
-	virtual void OnSignal();
-	virtual Event* Clone() const;
-	virtual Event* CreateFromPrototype() const;
-	virtual void LoadFromS11nBlock(const EventS11nBlock& block);
-	virtual void SaveToS11nBlock(EventS11nBlock& block) const;
+	GUID GetPrototypeGUID() const override;
+	int GetPriority() const override;
+	std::wstring GetName() const override;
+	std::wstring GetDescription() const override;
+	bool ShowConfigDialog(CWindow parent, class PrefPageModel* pPrefPageModel) override;
+	void OnSignal() override;
+	std::unique_ptr<Event> Clone() const override;
+	std::unique_ptr<Event> CreateFromPrototype() const override;
+	void LoadFromS11nBlock(const EventS11nBlock& block) override;
+	void SaveToS11nBlock(EventS11nBlock& block) const override;
+    void ApplyVisitor(IEventVisitor& visitor) override;
 
 public:
 	PlayerEvent();

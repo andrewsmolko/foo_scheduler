@@ -11,10 +11,10 @@ PrefPageModel::PrefPageModel(const ModelState& modelState) : m_modelState(modelS
 {
 }
 
-void PrefPageModel::AddEvent(std::auto_ptr<Event> pEvent)
+void PrefPageModel::AddEvent(std::unique_ptr<Event>&& pEvent)
 {
 	Event* pE = pEvent.get();
-	m_modelState.events.push_back(pEvent);
+	m_modelState.events.push_back(std::move(pEvent));
 	m_eventAddedSignal(pE);
 	m_modelChangedSignal();
 }
@@ -65,10 +65,10 @@ boost::signals2::connection PrefPageModel::ConnectEventRemovedSlot(const EventRe
 	return m_eventRemovedSignal.connect(slot);
 }
 
-void PrefPageModel::AddActionList(std::auto_ptr<ActionList> pActionList)
+void PrefPageModel::AddActionList(std::unique_ptr<ActionList>&& pActionList)
 {
 	ActionList* pAL = pActionList.get();
-	m_modelState.actionLists.push_back(pActionList);
+	m_modelState.actionLists.push_back(std::move(pActionList));
 	
 	m_actionListAddedSignal(pAL);
 	m_modelChangedSignal();

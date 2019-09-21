@@ -71,22 +71,22 @@ void PreferencesPage::OnBtnAddEvent(UINT uNotifyCode, int nID, CWindow wndCtl)
 	if (uCmdID == 0)
 		return;
 
-	std::auto_ptr<Event> pNewEvent(eventPrototypes[uCmdID - 1]->CreateFromPrototype());
+	auto pNewEvent(eventPrototypes[uCmdID - 1]->CreateFromPrototype());
 
 	if (!pNewEvent->ShowConfigDialog(*this, m_pModel.get()))
 		return;
 
-	m_pModel->AddEvent(pNewEvent);
+	m_pModel->AddEvent(std::move(pNewEvent));
 }
 
 void PreferencesPage::OnBtnAddActionList(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
-	std::auto_ptr<ActionList> pActionList(new ActionList);
+	std::unique_ptr<ActionList> pActionList(new ActionList);
 
 	if (!pActionList->ShowConfigDialog(*this, m_pModel.get()))
 		return;
 
-	m_pModel->AddActionList(pActionList);
+	m_pModel->AddActionList(std::move(pActionList));
 }
 
 void PreferencesPage::OnChanged()

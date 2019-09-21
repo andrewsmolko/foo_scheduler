@@ -20,7 +20,7 @@ public:
 		explicit ExecSession(const ActionSetVolume& action);
 		~ExecSession();
 
-		virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc);
+		virtual void Init(IActionListExecSessionFuncs& alesFuncs);
 		virtual void Run(const AsyncCall::CallbackPtr& completionCall);
 		virtual const IAction* GetParentAction() const;
 		virtual bool GetCurrentStateDescription(std::wstring& descr) const;
@@ -37,7 +37,7 @@ public:
 		int m_secondsLeft;
 		TimersManager::TimerID m_timerID;
 		AsyncCall::CallbackPtr m_completionCall;
-		boost::function<void ()> m_updateALESDescriptionFunc;
+        IActionListExecSessionFuncs* m_alesFuncs = nullptr;
 	};
 
 	static const int s_maxFadeDuration = 24 * 60 * 60 * 365;

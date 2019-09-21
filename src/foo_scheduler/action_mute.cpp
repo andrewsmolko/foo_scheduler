@@ -89,7 +89,7 @@ void ActionToggleMute::ExecSession::Run(const AsyncCall::CallbackPtr& completion
 	AsyncCall::AsyncRunInMainThread(completionCall);
 }
 
-void ActionToggleMute::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionToggleMute::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

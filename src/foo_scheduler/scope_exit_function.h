@@ -9,8 +9,14 @@ public:
 
 	~ScopeExitFunction()
 	{
-		m_func();
+        if (m_func)
+		    m_func();
 	}
+
+    void Clear()
+    {
+        m_func.clear();
+    }
 
 private:
 	boost::function<void ()> m_func;

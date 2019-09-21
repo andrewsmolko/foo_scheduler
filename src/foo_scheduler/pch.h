@@ -32,27 +32,25 @@
 #include <vector>
 #include <map>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/any.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/detail/atomic_count.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/format.hpp>
+#include <boost/function.hpp>
+#include <boost/intrusive_ptr.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/detail/atomic_count.hpp>
-
-#include <boost/noncopyable.hpp>
-#include <boost/function.hpp>
-#include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/ptr_container/ptr_map.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <boost/signals2.hpp>
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/assign/list_of.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 
 //#ifdef UNICODE
 //#if defined _M_IX86

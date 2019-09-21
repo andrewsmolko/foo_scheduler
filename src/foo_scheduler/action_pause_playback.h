@@ -10,7 +10,7 @@ public:
 	public:
 		explicit ExecSession(const ActionPausePlayback& action);
 
-		virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc);
+		virtual void Init(IActionListExecSessionFuncs& alesFuncs);
 		virtual void Run(const AsyncCall::CallbackPtr& completionCall);
 		virtual const IAction* GetParentAction() const;
 		virtual bool GetCurrentStateDescription(std::wstring& descr) const;

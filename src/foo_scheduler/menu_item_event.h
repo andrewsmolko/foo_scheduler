@@ -9,16 +9,17 @@
 class MenuItemEvent : public Event
 {
 public: // Event
-	virtual GUID GetPrototypeGUID() const;
-	virtual int GetPriority() const;
-	virtual std::wstring GetName() const;
-	virtual std::wstring GetDescription() const;
-	virtual bool ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageModel);
-	virtual void OnSignal();
-	virtual Event* Clone() const;
-	virtual Event* CreateFromPrototype() const;
-	virtual void LoadFromS11nBlock(const EventS11nBlock& block);
-	virtual void SaveToS11nBlock(EventS11nBlock& block) const;
+    GUID GetPrototypeGUID() const override;
+    int GetPriority() const override;
+    std::wstring GetName() const override;
+    std::wstring GetDescription() const override;
+    bool ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageModel) override;
+    void OnSignal() override;
+    std::unique_ptr<Event> Clone() const override;
+    std::unique_ptr<Event> CreateFromPrototype() const override;
+    void LoadFromS11nBlock(const EventS11nBlock& block) override;
+    void SaveToS11nBlock(EventS11nBlock& block) const override;
+    void ApplyVisitor(IEventVisitor& visitor) override;
 
 public:
 	MenuItemEvent();
@@ -33,11 +34,13 @@ public:
 	EFinalAction GetFinalAction() const;
 	std::wstring GetMenuItemName() const;
 	GUID GetGUID() const;
+    std::unique_ptr<MenuItemEvent> Duplicate(const std::wstring &newMenuItemName) const;
 	
 private:
 	friend class MenuItemEventEditor;
 	void SetFinalAction(EFinalAction finalAction);
 	void SetMenuItemName(const std::wstring& menuItemName);
+    void GenerateGUID();
 
 private:
 	MenuItemEvent(const MenuItemEvent& rhs);

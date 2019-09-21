@@ -111,4 +111,3 @@ HANDLE TimersManager::CancelTimerWithID(TimerID timerID)
 
 	return timerHandle;
 }
-

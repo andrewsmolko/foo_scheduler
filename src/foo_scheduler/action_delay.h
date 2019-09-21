@@ -20,7 +20,7 @@ public:
 		explicit ExecSession(const ActionDelay& action);
 		~ExecSession();
 
-		virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc);
+		virtual void Init(IActionListExecSessionFuncs& alesFuncs);
 		virtual void Run(const AsyncCall::CallbackPtr& completionCall);
 		virtual const IAction* GetParentAction() const;
 		virtual bool GetCurrentStateDescription(std::wstring& descr) const;
@@ -33,7 +33,7 @@ public:
 		TimersManager::TimerID m_timerID;
 		AsyncCall::CallbackPtr m_completionCall;
 		int m_secondsLeft;
-		boost::function<void ()> m_updateALESDescriptionFunc;
+        IActionListExecSessionFuncs *m_alesFuncs = nullptr;
 	};
 
 	ActionDelay();

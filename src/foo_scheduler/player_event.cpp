@@ -81,9 +81,9 @@ void PlayerEvent::OnSignal()
 	}
 }
 
-Event* PlayerEvent::Clone() const
+std::unique_ptr<Event> PlayerEvent::Clone() const
 {
-	return new PlayerEvent(*this);
+    return std::unique_ptr<Event>(new PlayerEvent(*this));
 }
 
 PlayerEventType::Type PlayerEvent::GetType() const
@@ -159,6 +159,11 @@ void PlayerEvent::SaveToS11nBlock(EventS11nBlock& block) const
 	block.playerEvent.SetValue(b);
 }
 
+void PlayerEvent::ApplyVisitor(IEventVisitor& visitor)
+{
+    visitor.Visit(*this);
+}
+
 GUID PlayerEvent::GetPrototypeGUID() const
 {
 	// {3a25dc7e-e051-42c1-921a-7e1d4c7ee416} 
@@ -184,7 +189,7 @@ void PlayerEvent::SetStopReasons(const StopReasons& stopReasons)
 	m_stopReasons = stopReasons;
 }
 
-Event* PlayerEvent::CreateFromPrototype() const
+std::unique_ptr<Event> PlayerEvent::CreateFromPrototype() const
 {
 	return Clone();
 }

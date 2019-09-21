@@ -3,6 +3,21 @@
 #include "async_call.h"
 
 //------------------------------------------------------------------------------
+// IActionListExecSessionDelegate
+//------------------------------------------------------------------------------
+
+class IActionListExecSessionFuncs
+{
+public:
+    virtual boost::any GetValue(const std::string &key) const = 0;
+    virtual void SetValue(const std::string &key, const boost::any &value) = 0;
+    virtual void UpdateDescription() = 0;
+
+protected:
+    ~IActionListExecSessionFuncs() {}
+};
+
+//------------------------------------------------------------------------------
 // IActionExecSession
 //------------------------------------------------------------------------------
 
@@ -12,8 +27,7 @@ struct IActionExecSession
 {
 	virtual ~IActionExecSession() {}
 
-	// updateALESDescriptionFunc is used to update the parent action list exec session description.
-	virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc) = 0;
+	virtual void Init(IActionListExecSessionFuncs& alesFuncs) = 0;
 
 	// completionCall is called after an action has been completed.
 	virtual void Run(const AsyncCall::CallbackPtr& completionCall) = 0;

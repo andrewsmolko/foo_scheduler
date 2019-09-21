@@ -190,7 +190,7 @@ void ActionSetVolume::ExecSession::OnTimer()
 
 	--m_secondsLeft;
 
-	m_updateALESDescriptionFunc();
+    m_alesFuncs->UpdateDescription();
 
 	if (m_secondsLeft > 0)
 		return;
@@ -201,9 +201,9 @@ void ActionSetVolume::ExecSession::OnTimer()
 	AsyncCall::AsyncRunInMainThread(m_completionCall);
 }
 
-void ActionSetVolume::ExecSession::Init(const boost::function<void ()>& updateALESDescriptionFunc)
+void ActionSetVolume::ExecSession::Init(IActionListExecSessionFuncs& alesFuncs)
 {
-	m_updateALESDescriptionFunc = updateALESDescriptionFunc;
+    m_alesFuncs = &alesFuncs;
 }
 
 bool ActionSetVolume::ExecSession::GetCurrentStateDescription(std::wstring& descr) const

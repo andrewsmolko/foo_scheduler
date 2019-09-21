@@ -1,6 +1,7 @@
 #pragma once
 
 #include "event_s11n_block.h"
+#include "event_visitor.h"
 
 class ActionList;
 
@@ -31,9 +32,10 @@ public:
 	// Called after firing an event. In this function event may be deleted.
 	virtual void OnSignal() = 0;
 
-	virtual Event* Clone() const = 0;
+	virtual std::unique_ptr<Event> Clone() const = 0;
+	virtual std::unique_ptr<Event> CreateFromPrototype() const = 0;
 
-	virtual Event* CreateFromPrototype() const = 0;
+    virtual void ApplyVisitor(IEventVisitor& visitor) = 0;
 
 private: // These functions must be overridden but not accessible.
 	virtual void LoadFromS11nBlock(const EventS11nBlock& block) = 0;
@@ -51,6 +53,6 @@ private:
 // For boost::ptr_vector.
 inline Event* new_clone(const Event& e)
 {
-	return e.Clone();
+	return e.Clone().release();
 }
 

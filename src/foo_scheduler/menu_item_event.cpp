@@ -57,9 +57,14 @@ void MenuItemEvent::SetMenuItemName(const std::wstring& menuItemName)
 	m_menuItemName = menuItemName;
 }
 
+void MenuItemEvent::GenerateGUID()
+{
+    UuidCreate(&m_guid);
+}
+
 MenuItemEvent::MenuItemEvent() : m_finalAction(finalActionReenable)
 {
-	UuidCreate(&m_guid);
+    GenerateGUID();
 }
 
 MenuItemEvent::MenuItemEvent(const MenuItemEvent& rhs) :
@@ -81,6 +86,14 @@ GUID MenuItemEvent::GetGUID() const
 	return m_guid;
 }
 
+std::unique_ptr<MenuItemEvent> MenuItemEvent::Duplicate(const std::wstring &newMenuItemName) const
+{
+    std::unique_ptr<MenuItemEvent> result(new MenuItemEvent(*this));
+    result->SetMenuItemName(newMenuItemName);
+    result->GenerateGUID();
+    return result;
+}
+
 void MenuItemEvent::OnSignal()
 {
 	switch (m_finalAction)
@@ -99,9 +112,9 @@ void MenuItemEvent::OnSignal()
 	}
 }
 
-Event* MenuItemEvent::Clone() const
+std::unique_ptr<Event> MenuItemEvent::Clone() const
 {
-	return new MenuItemEvent(*this);
+    return std::unique_ptr<Event>(new MenuItemEvent(*this));
 }
 
 void MenuItemEvent::LoadFromS11nBlock(const EventS11nBlock& block)
@@ -131,6 +144,11 @@ void MenuItemEvent::SaveToS11nBlock(EventS11nBlock& block) const
 	block.menuItemEvent.SetValue(b);
 }
 
+void MenuItemEvent::ApplyVisitor(IEventVisitor& visitor)
+{
+    visitor.Visit(*this);
+}
+
 GUID MenuItemEvent::GetPrototypeGUID() const
 {
 	// {b368eead-70bf-426b-b597-4d92c685dcb0} 
@@ -145,12 +163,12 @@ int MenuItemEvent::GetPriority() const
 	return 20;
 }
 
-Event* MenuItemEvent::CreateFromPrototype() const
+std::unique_ptr<Event> MenuItemEvent::CreateFromPrototype() const
 {
-	MenuItemEvent* pClone(new MenuItemEvent(*this));
+    std::unique_ptr<MenuItemEvent> pClone(new MenuItemEvent(*this));
 	
 	// It's important to change uuid, otherwise there may be problems with keyboard shortcuts.
-	UuidCreate(&pClone->m_guid);
+    pClone->GenerateGUID();
 
 	return pClone;
 }

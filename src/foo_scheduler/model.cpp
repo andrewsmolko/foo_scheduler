@@ -50,10 +50,10 @@ void Model::Load(foobar_stream_reader& stream)
 			if (!pPrototype)
 				continue;
 
-			std::auto_ptr<Event> pEvent(pPrototype->Clone());
+			auto pEvent(pPrototype->Clone());
 			pEvent->Load(eventBlock);
 
-			m_modelState.events.push_back(pEvent);
+			m_modelState.events.push_back(std::move(pEvent));
 		}
 	}
 

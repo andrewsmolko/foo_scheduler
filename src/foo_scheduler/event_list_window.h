@@ -59,6 +59,7 @@ private:
 	enum EPopupMenuItems
 	{
 		menuItemEdit = 1000,
+        menuItemDuplicate,
 		menuItemRemove,
 		menuItemMoveUp,
 		menuItemMoveDown

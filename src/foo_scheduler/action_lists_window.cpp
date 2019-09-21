@@ -3,6 +3,7 @@
 #include "service_manager.h"
 #include "action_list.h"
 #include "pref_page_model.h"
+#include "generate_duplicate_name.h"
 
 void ActionListsWindow::Init(PrefPageModel* pModel)
 {
@@ -74,6 +75,10 @@ void ActionListsWindow::AppendActionListItems(CMenu& menuPopup)
 
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(actionListMenuItemEdit), _T("Edit..."));
+
+    menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
+        static_cast<UINT_PTR>(actionListMenuItemDuplicate), _T("Duplicate"));
+
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(actionListMenuItemRemove), _T("Remove"));
 }
@@ -106,7 +111,15 @@ void ActionListsWindow::ShowActionListContextMenu(CTreeItem ti, const CPoint& pn
 			m_pModel->UpdateActionList(pActionList);
 		break;
 
-	case actionListMenuItemRemove:
+    case actionListMenuItemDuplicate:
+        {
+            const std::wstring newName = GenerateDuplicateName(
+                pActionList->GetName(), m_pModel->GetActionLists(), [](ActionList *al) { return al->GetName(); });
+            m_pModel->AddActionList(pActionList->Duplicate(newName));
+        }
+        break;
+
+    case actionListMenuItemRemove:
 		m_pModel->RemoveActionList(pActionList);
 		break;
 

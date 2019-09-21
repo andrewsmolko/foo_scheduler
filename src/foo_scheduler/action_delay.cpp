@@ -157,7 +157,7 @@ void ActionDelay::ExecSession::OnTimer()
 {
 	--m_secondsLeft;
 
-	m_updateALESDescriptionFunc();
+    m_alesFuncs->UpdateDescription();
 
 	if (m_secondsLeft > 0)
 		return;
@@ -168,9 +168,9 @@ void ActionDelay::ExecSession::OnTimer()
 	AsyncCall::AsyncRunInMainThread(m_completionCall);
 }
 
-void ActionDelay::ExecSession::Init(const boost::function<void ()>& updateALESDescriptionFunc)
+void ActionDelay::ExecSession::Init(IActionListExecSessionFuncs& alesFuncs)
 {
-	m_updateALESDescriptionFunc = updateALESDescriptionFunc;
+    m_alesFuncs = &alesFuncs;
 }
 
 bool ActionDelay::ExecSession::GetCurrentStateDescription(std::wstring& descr) const

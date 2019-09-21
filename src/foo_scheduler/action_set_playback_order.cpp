@@ -132,7 +132,7 @@ const IAction* ActionSetPlaybackOrder::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionSetPlaybackOrder::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionSetPlaybackOrder::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

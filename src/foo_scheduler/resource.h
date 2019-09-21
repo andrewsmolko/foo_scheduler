@@ -36,6 +36,7 @@
 #define IDC_EDIT_TRACK_NO               1016
 #define IDC_RADIO_ORDINARY_START        1017
 #define IDC_RADIO_START_FROM_TRACK      1018
+#define IDC_RADIO_START_FROM_SAVED_STATE 1019
 #define IDC_COMBO_EVENT                 1021
 #define IDC_COMBO_DAY                   1021
 #define IDC_TIME_PICKER                 1028
@@ -84,7 +85,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        118
+#define _APS_NEXT_RESOURCE_VALUE        119
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1082
 #define _APS_NEXT_SYMED_VALUE           101

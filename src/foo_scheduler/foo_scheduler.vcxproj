@@ -117,6 +117,8 @@
     <ClInclude Include="action_prev_track.h" />
     <ClInclude Include="action_prev_track_s11n_block.h" />
     <ClInclude Include="action_s11n_block.h" />
+    <ClInclude Include="action_save_playback_state.h" />
+    <ClInclude Include="action_save_playback_state_s11n_block.h" />
     <ClInclude Include="action_wait_n_tracks_played.h" />
     <ClInclude Include="action_wait_n_tracks_played_s11n_block.h" />
     <ClInclude Include="async_call.h" />
@@ -124,8 +126,10 @@
     <ClInclude Include="duration_units.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="event_s11n_block.h" />
+    <ClInclude Include="event_visitor.h" />
     <ClInclude Include="foobar_services.h" />
     <ClInclude Include="foobar_stream.h" />
+    <ClInclude Include="generate_duplicate_name.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="prototypes_manager.h" />
@@ -182,6 +186,7 @@
     <ClCompile Include="action_list_exec_session.cpp" />
     <ClCompile Include="action_next_track.cpp" />
     <ClCompile Include="action_prev_track.cpp" />
+    <ClCompile Include="action_save_playback_state.cpp" />
     <ClCompile Include="action_wait_n_tracks_played.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="foobar_services.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #define PLUGIN_DLL     "foo_scheduler"
-#define PLUGIN_VERSION "4.14"
+#define PLUGIN_VERSION "4.17"
 
 // To support correct upgrade from the 3rd version of the plugin.
 #define PLUGIN_CFG_GLOBAL_VERSION 0x0040
@@ -9,10 +9,14 @@
 #define PLUGIN_NAME        "Scheduler"
 #define PLUGIN_ABOUT \
 	"Build date: " __DATE__ "\n\n" \
-	"Copyright (C) 2006-2015 Andrew Smolko.\n" \
+	"Copyright (C) 2006-2019 Andrew Smolko.\n" \
 	"All rights reserved.\n" \
     "\n" \
     "Changelog:\n" \
+    "\n" \
+    "= 4.17\n" \
+    "* Added action list and event duplicate functionality.\n" \
+	"* Added 'Save playback state' action and updated 'Start playback' to start from saved state.\n" \
     "\n" \
     "= 4.14\n" \
     "* Recovered WinXP support.\n" \

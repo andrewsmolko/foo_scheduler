@@ -39,7 +39,7 @@ public:
 
 	std::vector<Event*> GetEvents();
 
-	void AddEvent(std::auto_ptr<Event> pEvent);
+	void AddEvent(std::unique_ptr<Event>&& pEvent);
 	void UpdateEvent(Event* pEvent);
 	void RemoveEvent(Event* pEvent);
 
@@ -60,7 +60,7 @@ public:
 
 	ActionList* GetActionListByGUID(const GUID& guid);
 
-	void AddActionList(std::auto_ptr<ActionList> pActionList);
+	void AddActionList(std::unique_ptr<ActionList>&& pActionList);
 	void RemoveActionList(ActionList* pActionList);
 	void UpdateActionList(ActionList* pActionList);
 

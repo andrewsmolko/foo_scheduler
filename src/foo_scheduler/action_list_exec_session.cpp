@@ -44,7 +44,7 @@ void ActionListExecSession::RunNextAction()
 	m_pActionExecSession = actions[m_currentActionIndex]->CreateExecSession();
 	_ASSERTE(m_pActionExecSession);
 
-	m_pActionExecSession->Init(boost::bind(&ActionListExecSession::UpdateDescription, this));
+	m_pActionExecSession->Init(*this);
 
 	// Async call takes boost::weak_ptr, which is automatically constructed from boost::shared_ptr.
 	AsyncCall::CallbackPtr runNextActionCallback = AsyncCall::MakeCallback<ActionListExecSession>(
@@ -85,4 +85,24 @@ void ActionListExecSession::UpdateDescription()
 	ServiceManager::Instance().GetRootController().UpdateExecSession(shared_from_this());
 }
 
+boost::any ActionListExecSession::GetValue(const std::string &key) const
+{
+    auto it = m_keyValueStore.find(key);
+    if (it != m_keyValueStore.cend())
+    {
+        return it->second;
+    }
+    return boost::any();
+}
 
+void ActionListExecSession::SetValue(const std::string &key, const boost::any &value)
+{
+    if (value.empty())
+    {
+        m_keyValueStore.erase(key);
+    }
+    else
+    {
+        m_keyValueStore[key] = value;
+    }
+}

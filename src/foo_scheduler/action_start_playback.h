@@ -7,18 +7,35 @@
 class ActionStartPlayback : public IAction
 {
 public:
-	class ExecSession : public IActionExecSession
+	class ExecSession
+		: public IActionExecSession
+		, public boost::enable_shared_from_this<ExecSession>
+		, public play_callback
 	{
 	public:
 		explicit ExecSession(const ActionStartPlayback& action);
 
-		virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc);
+		virtual void Init(IActionListExecSessionFuncs& alesFuncs);
 		virtual void Run(const AsyncCall::CallbackPtr& completionCall);
 		virtual const IAction* GetParentAction() const;
 		virtual bool GetCurrentStateDescription(std::wstring& descr) const;
 
+	private: // play_callback
+		virtual void on_playback_stop(playback_control::t_stop_reason p_reason) {}
+		virtual void on_playback_pause(bool p_state) {}
+		virtual void on_playback_starting(play_control::t_track_command p_command, bool p_paused) {}
+		virtual void on_playback_new_track(metadb_handle_ptr p_track);
+		virtual void on_playback_seek(double p_time) {}
+		virtual void on_playback_edited(metadb_handle_ptr p_track) {}
+		virtual void on_playback_dynamic_info(const file_info & p_info) {}
+		virtual void on_playback_dynamic_info_track(const file_info & p_info) {}
+		virtual void on_playback_time(double p_time) {}
+		virtual void on_volume_change(float p_new_val) {}
+
 	private:
 		const ActionStartPlayback& m_action;
+        IActionListExecSessionFuncs* m_alesFuncs = nullptr;
+		AsyncCall::CallbackPtr m_completionCall;
 	};
 
 public:
@@ -27,7 +44,8 @@ public:
 	enum EStartType
 	{
 		startTypeOrdinary,
-		startTypeFromTrack
+		startTypeFromTrack,
+        startTypeFromSavedState
 	};
 
 	EStartType GetStartPlaybackType() const;
@@ -83,6 +101,7 @@ private:
 		COMMAND_ID_HANDLER_EX(IDC_BTN_PICK_CURRENT_TRACK, OnPickCurrentTrack)
 		COMMAND_ID_HANDLER_EX(IDC_RADIO_ORDINARY_START, OnStartTypeSelected)
 		COMMAND_ID_HANDLER_EX(IDC_RADIO_START_FROM_TRACK, OnStartTypeSelected)
+        COMMAND_ID_HANDLER_EX(IDC_RADIO_START_FROM_SAVED_STATE, OnStartTypeSelected)
 
 		COMMAND_ID_HANDLER_EX(IDOK,     OnCloseCmd)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)

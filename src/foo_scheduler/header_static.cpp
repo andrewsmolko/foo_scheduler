@@ -53,7 +53,8 @@ BOOL HeaderStatic::SubclassWindow(HWND hWnd)
 	SetTextColor         (GetSysColor(COLOR_CAPTIONTEXT));
 
 	CLogFont logFont(GetFont());
-	logFont.lfWeight = FW_BOLD;
+	logFont.SetBold();
+	logFont.SetHeight(9);
 
 	m_newFont = logFont.CreateFontIndirect();
 	

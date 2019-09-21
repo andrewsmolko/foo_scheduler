@@ -189,7 +189,7 @@ const IAction* ActionChangePlaylist::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionChangePlaylist::ExecSession::Init(const boost::function<void ()>& /*updateALESDescriptionFunc*/)
+void ActionChangePlaylist::ExecSession::Init(IActionListExecSessionFuncs&)
 {
 }
 

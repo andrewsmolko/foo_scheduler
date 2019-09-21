@@ -4,6 +4,59 @@
 #include "action.h"
 #include "action_list.h"
 #include "pref_page_model.h"
+#include "generate_duplicate_name.h"
+
+namespace
+{
+
+class EventDuplicateVisitor : public IEventVisitor
+{
+public:
+    explicit EventDuplicateVisitor(const std::vector<Event*>& events)
+        : m_modelEvents(events)
+    {
+    }
+
+    std::unique_ptr<Event> TakeEvent()
+    {
+        return std::move(m_event);
+    }
+
+private: // IEventVisitor
+    void Visit(PlayerEvent& event) override
+    {
+        m_event = event.Clone();
+    }
+
+    void Visit(DateTimeEvent& event) override
+    {
+        const std::wstring newTitle = GenerateDuplicateName(event.GetTitle(), m_modelEvents, [] (Event* e) {
+            if (const DateTimeEvent* dateTimeEvent = dynamic_cast<const DateTimeEvent*>(e))
+                return dateTimeEvent->GetTitle();
+            return std::wstring();
+        });
+
+        m_event = event.Duplicate(newTitle);
+    }
+
+    void Visit(MenuItemEvent& event) override
+    {
+        const std::wstring newMenuItemName =
+            GenerateDuplicateName(event.GetMenuItemName(), m_modelEvents, [](Event *e) {
+                if (const MenuItemEvent *menuItemEvent = dynamic_cast<const MenuItemEvent *>(e))
+                    return menuItemEvent->GetMenuItemName();
+                return std::wstring();
+            });
+
+        m_event = event.Duplicate(newMenuItemName);
+    }
+
+private:
+    std::vector<Event*> m_modelEvents;
+    std::unique_ptr<Event> m_event;
+};
+
+} // namespace
 
 EventListWindow::EventListWindow() : m_columnsBeingInited(false)
 {
@@ -138,6 +191,14 @@ void EventListWindow::ShowEventContextMenu(int item, const CPoint& point)
 		EditEvent(pEvent);
 		break;
 
+    case menuItemDuplicate:
+        {
+            EventDuplicateVisitor visitor(m_pModel->GetEvents());
+            pEvent->ApplyVisitor(visitor);           
+            m_pModel->AddEvent(visitor.TakeEvent());
+        }
+        break;
+
 	case menuItemRemove:
 		m_pModel->RemoveEvent(pEvent);
 		break;
@@ -211,6 +272,10 @@ void EventListWindow::AppendEventItems(CMenu& menuPopup, const Event* pEvent)
 
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(menuItemEdit), L"Edit...");
+
+    menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
+        static_cast<UINT_PTR>(menuItemDuplicate), L"Duplicate");
+
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(menuItemRemove), L"Remove");
 

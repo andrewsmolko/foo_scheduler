@@ -53,6 +53,7 @@ private:
 	enum EActionListPopupMenuItems
 	{
 		actionListMenuItemEdit = 1000,
+		actionListMenuItemDuplicate,
 		actionListMenuItemRemove
 	};
 

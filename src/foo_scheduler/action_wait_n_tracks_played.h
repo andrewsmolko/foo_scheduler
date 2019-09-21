@@ -20,7 +20,7 @@ public:
 		explicit ExecSession(const ActionWaitNTracksPlayed& action);
 		~ExecSession();
 
-		virtual void Init(const boost::function<void ()>& updateALESDescriptionFunc);
+		virtual void Init(IActionListExecSessionFuncs& alesFuncs);
 		virtual void Run(const AsyncCall::CallbackPtr& completionCall);
 
 		void SubscribeToPlayerEvents();
@@ -46,7 +46,7 @@ public:
 	private:
 		const ActionWaitNTracksPlayed& m_action;
 		AsyncCall::CallbackPtr m_completionCall;
-		boost::function<void ()> m_updateALESDescriptionFunc;
+        IActionListExecSessionFuncs* m_alesFuncs = nullptr;
 		int m_tracksLeft;
 		bool m_subscribedToPlayerEvents;
 		bool m_ignoreNextTrackEvent;
