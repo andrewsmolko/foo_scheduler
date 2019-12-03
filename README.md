@@ -3,6 +3,6 @@
 
 Build instructions:
 * Create **libs** folder
-* Download [boost](http://www.boost.org) and unpack it to libs, rename boost_1_59 to boost, so you have libs/boost/ 
+* Download [boost](http://www.boost.org) and unpack it to libs, rename boost_1_71 to boost, so you have libs/boost/ 
 * Download [wtl](http://sourceforge.net/projects/wtl) and unpack Include folder contents to libs/wtl/include/
-* Open src/foo_scheduler.sln in Microsoft Visual Studio 2010 and build
+* Open src/foo_scheduler.sln in Microsoft Visual Studio 2017 and build
