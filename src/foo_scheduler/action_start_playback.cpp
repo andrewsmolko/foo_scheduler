@@ -142,8 +142,6 @@ ActionStartPlayback::ExecSession::ExecSession(const ActionStartPlayback& action)
 
 void ActionStartPlayback::ExecSession::Run(const AsyncCall::CallbackPtr& completionCall)
 {
-    ScopeExitFunction scopeExit(boost::bind(&AsyncCall::AsyncRunInMainThread, completionCall));
-
     static_api_ptr_t<playlist_manager> pm;
 
 	if (m_action.GetStartPlaybackType() == startTypeFromTrack)
@@ -171,25 +169,13 @@ void ActionStartPlayback::ExecSession::Run(const AsyncCall::CallbackPtr& complet
         pm->queue_add_item_playlist(*playlist, *track);
     }
 
-	static_api_ptr_t<playback_control> pc;
+    ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
 
-	if (m_action.GetStartPlaybackType() != startTypeFromSavedState)
-	{
-		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
-		pc->start();
-		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(false);
-	}
-	else
-	{
-		static_api_ptr_t<play_callback_manager>()->register_callback(this,
-			flag_on_playback_new_track, false);
-		m_completionCall = completionCall;
+    m_completionCall = completionCall;
+    static_api_ptr_t<play_callback_manager>()->register_callback(this, flag_on_playback_new_track, false);   
 
-		ServiceManager::Instance().GetPlayerEventsManager().BlockEvents(true);
-		pc->start(playback_control::track_command_play, true);
-
-        scopeExit.Clear();
-	}
+    // Start playback in paused state.
+	static_api_ptr_t<playback_control>()->start(playback_control::track_command_play, true);
 }
 
 void ActionStartPlayback::ExecSession::on_playback_new_track(metadb_handle_ptr p_track)
@@ -202,11 +188,14 @@ void ActionStartPlayback::ExecSession::on_playback_new_track(metadb_handle_ptr p
 			
 			static_api_ptr_t<playback_control> pc;
 
-			const boost::any positionAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetPositionKey());
-			if (const double* position = boost::any_cast<double>(&positionAny))
-			{
-				pc->playback_seek(*position);
-			}
+            if (m_action.GetStartPlaybackType() == startTypeFromSavedState)
+            {
+                const boost::any positionAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetPositionKey());
+                if (const double* position = boost::any_cast<double>(&positionAny))
+                {
+                    pc->playback_seek(*position);
+                }
+            }
 
 			// We started playback in paused state, see above.
 			pc->pause(false);
