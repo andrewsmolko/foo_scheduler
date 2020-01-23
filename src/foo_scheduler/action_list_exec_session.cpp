@@ -36,9 +36,17 @@ void ActionListExecSession::RunNextAction()
 	{
 		m_pActionExecSession.reset();
 
-		// The last reference to this instance holds AsyncCall::MainThreadAsyncMethodCall::operator ().
-		ServiceManager::Instance().GetRootController().RemoveExecSession(this);
-		return;
+		if (m_pActionList->GetRestartAfterCompletion() && !actions.empty())
+		{
+			// Restart action list after completion if there are any actions inside it.
+			m_currentActionIndex = 0;
+		}
+		else
+		{
+			// The last reference to this instance holds AsyncCall::MainThreadAsyncMethodCall::operator ().
+			ServiceManager::Instance().GetRootController().RemoveExecSession(this);
+			return;
+		}
 	}
 
 	m_pActionExecSession = actions[m_currentActionIndex]->CreateExecSession();
@@ -83,6 +91,11 @@ std::wstring ActionListExecSession::GetDescription() const
 void ActionListExecSession::UpdateDescription()
 {
 	ServiceManager::Instance().GetRootController().UpdateExecSession(shared_from_this());
+}
+
+ActionListExecSession& ActionListExecSession::GetActionListExecSession()
+{
+	return *this;
 }
 
 boost::any ActionListExecSession::GetValue(const std::string &key) const

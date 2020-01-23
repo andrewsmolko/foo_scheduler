@@ -80,6 +80,7 @@
 #define IDC_EDIT_N_TRACKS               1080
 #define IDC_CHECK1                      1081
 #define IDC_ENABLED_CHECK               1081
+#define IDC_CHECK_RESTART_AFTER_COMPLETION 1081
 
 // Next default values for new objects
 // 

@@ -53,7 +53,7 @@ std::wstring DateTimeEvent::GetDescription() const
 	AddWakeUp(eventDescr);
 
 	if (!title.empty())
-		result += title + L" (" + eventDescr + L")";
+		result += title + L" [" + eventDescr + L"]";
 	else
 		result += eventDescr;
 

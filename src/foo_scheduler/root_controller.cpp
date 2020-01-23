@@ -73,17 +73,27 @@ void RootController::RemoveExecSession(ActionListExecSession* pSession)
 
 void RootController::RemoveAllExecSessions()
 {
-	// Make a copy.
-	std::vector<ActionListExecSessionPtr> execSessions = m_execSessions;
+	RemoveAllExecSessionsBut(nullptr);
+}
 
-	// Clear the model.
-	m_execSessions.clear();
-
-	// Notify about removal of each session.
-	for (std::size_t i = 0; i < execSessions.size(); ++i)
-		m_actionListExecSessionRemovedSignal(execSessions[i].get());
-
-	// Upon scope exit execSessions will be deleted and all sessions will be stopped.
+void RootController::RemoveAllExecSessionsBut(ActionListExecSession *session)
+{
+	for (auto it = m_execSessions.begin(); it != m_execSessions.end();)
+	{
+		ActionListExecSessionPtr sessionPtr = *it;
+		if (sessionPtr.get() == session)
+		{
+			// Skip session to leave.
+			++it;
+			continue;
+		}
+		else
+		{
+			// Remove session.
+			it = m_execSessions.erase(it);
+			m_actionListExecSessionRemovedSignal(sessionPtr.get());
+		}
+	}
 }
 
 void RootController::StopExecutionSessions()

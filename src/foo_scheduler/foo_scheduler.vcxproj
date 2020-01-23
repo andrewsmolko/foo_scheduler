@@ -140,6 +140,8 @@
     <ClInclude Include="scope_exit_function.h" />
     <ClInclude Include="service_manager.h" />
     <ClInclude Include="status_window.h" />
+    <ClInclude Include="action_stop_action_lists.h" />
+    <ClInclude Include="action_stop_action_lists_s11n_block.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="timers_manager.h" />
     <ClInclude Include="date_time_event.h" />
@@ -200,6 +202,7 @@
     <ClCompile Include="s11n_blocks.cpp" />
     <ClCompile Include="service_manager.cpp" />
     <ClCompile Include="status_window.cpp" />
+    <ClCompile Include="action_stop_action_lists.cpp" />
     <ClCompile Include="timers_manager.cpp" />
     <ClCompile Include="date_time_event.cpp" />
     <ClCompile Include="menu_item_event.cpp" />

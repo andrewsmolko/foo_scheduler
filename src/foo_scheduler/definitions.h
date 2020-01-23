@@ -1,7 +1,7 @@
 #pragma once
 
 #define PLUGIN_DLL     "foo_scheduler"
-#define PLUGIN_VERSION "4.18"
+#define PLUGIN_VERSION "4.19"
 
 // To support correct upgrade from the 3rd version of the plugin.
 #define PLUGIN_CFG_GLOBAL_VERSION 0x0040
@@ -13,6 +13,10 @@
 	"All rights reserved.\n" \
     "\n" \
     "Changelog:\n" \
+    "\n" \
+	"= 4.19\n" \
+    "* Added 'Restart after completion' option to action list.\n" \
+    "* Added 'Stop all action lists but this' action.\n" \
     "\n" \
     "= 4.18\n" \
     "* Fixed 'Wait until N tracks played' action execution right after 'Start playback' action.\n" \

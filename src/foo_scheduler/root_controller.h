@@ -24,6 +24,7 @@ public:
 	void UpdateExecSession(const ActionListExecSessionPtr& pSession);
 	void RemoveExecSession(ActionListExecSession* pSession);
 	void RemoveAllExecSessions();
+	void RemoveAllExecSessionsBut(ActionListExecSession* session);
 	std::vector<ActionListExecSession*> GetActionListExecSessions();
 
 	typedef boost::signals2::signal<void (ActionListExecSession*)> ActionListExecSessionAdded;

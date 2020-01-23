@@ -27,6 +27,7 @@ public:
 	const GUID& GetGUID() const;
 	std::wstring GetName() const;
 	std::wstring GetDescription() const;
+	bool GetRestartAfterCompletion() const;
 
 	bool ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageModel);
 
@@ -48,12 +49,14 @@ private:
 	void CreateGUID();
 	friend class ActionListEditor;
 	void SetName(const std::wstring& name);
+	void SetRestartAfterCompletion(bool restart);
 
 	void MoveAction(const IAction* pAction, bool up);
 
 private:
 	GUID m_guid;
 	std::wstring m_name;
+	bool m_restartAfterCompletion = false;
 
 	ActionsContainer m_actions;
 };

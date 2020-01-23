@@ -15,7 +15,8 @@ ActionList::ActionList()
 ActionList::ActionList(const ActionList& rhs) :
 	m_guid(rhs.m_guid),
 	m_name(rhs.m_name),
-	m_actions(rhs.m_actions)
+	m_actions(rhs.m_actions),
+	m_restartAfterCompletion(rhs.m_restartAfterCompletion)
 {
 }
 
@@ -44,12 +45,25 @@ std::wstring ActionList::GetName() const
 
 std::wstring ActionList::GetDescription() const
 {
-	return GetName();
+	auto result = GetName();
+	if (m_restartAfterCompletion)
+		result += L" [restart after completion]";
+	return result;
+}
+
+bool ActionList::GetRestartAfterCompletion() const
+{
+	return m_restartAfterCompletion;
 }
 
 void ActionList::SetName(const std::wstring& name)
 {
 	m_name = name;
+}
+
+void ActionList::SetRestartAfterCompletion(bool restart)
+{
+	m_restartAfterCompletion = restart;
 }
 
 void ActionList::AddAction(std::auto_ptr<IAction> pAction)
@@ -143,6 +157,9 @@ void ActionList::LoadFromS11nBlock(const ActionListS11nBlock& block)
 			m_actions.push_back(pAction);
 		}
 	}
+
+	if (block.restartAfterCompletion.Exists())
+		m_restartAfterCompletion = block.restartAfterCompletion.GetValue();
 }
 
 void ActionList::SaveToS11nBlock(ActionListS11nBlock& block) const
@@ -158,6 +175,8 @@ void ActionList::SaveToS11nBlock(ActionListS11nBlock& block) const
 		m_actions[i].SaveToS11nBlock(actionBlock);
 		block.actions.Add(actionBlock);
 	}
+
+	block.restartAfterCompletion.SetValue(m_restartAfterCompletion);
 }
 
 //------------------------------------------------------------------------------
@@ -173,6 +192,8 @@ ActionListEditor::ActionListEditor(ActionList* pActionList, PrefPageModel* pPref
 BOOL ActionListEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
 	m_actionListName = GetDlgItem(IDC_ACTION_LIST_NAME);
+
+	CheckDlgButton(IDC_CHECK_RESTART_AFTER_COMPLETION, m_pActionList->GetRestartAfterCompletion());
 
 	m_actionListName.SetWindowText(m_pActionList->GetName().c_str());
 	m_actionListName.SetSel(0, -1);
@@ -206,6 +227,7 @@ void ActionListEditor::OnClose(UINT uNotifyCode, int nID, CWindow wndCtl)
 		}
 
 		m_pActionList->SetName(static_cast<LPCWSTR>(text));
+		m_pActionList->SetRestartAfterCompletion(IsDlgButtonChecked(IDC_CHECK_RESTART_AFTER_COMPLETION) == TRUE);
 	}
 
 	EndDialog(nID);

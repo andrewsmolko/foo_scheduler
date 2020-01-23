@@ -6,12 +6,15 @@
 // IActionListExecSessionDelegate
 //------------------------------------------------------------------------------
 
+class ActionListExecSession;
+
 class IActionListExecSessionFuncs
 {
 public:
     virtual boost::any GetValue(const std::string &key) const = 0;
     virtual void SetValue(const std::string &key, const boost::any &value) = 0;
     virtual void UpdateDescription() = 0;
+	virtual ActionListExecSession& GetActionListExecSession() = 0;
 
 protected:
     ~IActionListExecSessionFuncs() {}

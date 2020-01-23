@@ -20,6 +20,7 @@ private: // ActionListKeyValueStore
     boost::any GetValue(const std::string &key) const override;
     void SetValue(const std::string &key, const boost::any &value) override;
     void UpdateDescription() override;
+	ActionListExecSession& GetActionListExecSession() override;
 
 private:
 	void RunNextAction();

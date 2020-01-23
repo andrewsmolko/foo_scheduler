@@ -69,6 +69,9 @@
     <Filter Include="Source Files\actions\save_playback_state_45">
       <UniqueIdentifier>{73d9256e-3fb0-4035-b8cd-22ea55868d96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\actions\stop_action_lists_70">
+      <UniqueIdentifier>{3f7120e5-8276-4041-af18-ce7a575203d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.h">
@@ -290,6 +293,12 @@
     <ClInclude Include="generate_duplicate_name.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="action_stop_action_lists.h">
+      <Filter>Source Files\actions\stop_action_lists_70</Filter>
+    </ClInclude>
+    <ClInclude Include="action_stop_action_lists_s11n_block.h">
+      <Filter>Source Files\actions\stop_action_lists_70</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action_list.cpp">
@@ -408,6 +417,9 @@
     </ClCompile>
     <ClCompile Include="action_save_playback_state.cpp">
       <Filter>Source Files\actions\save_playback_state_45</Filter>
+    </ClCompile>
+    <ClCompile Include="action_stop_action_lists.cpp">
+      <Filter>Source Files\actions\stop_action_lists_70</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

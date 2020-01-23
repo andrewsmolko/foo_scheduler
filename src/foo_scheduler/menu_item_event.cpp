@@ -22,15 +22,15 @@ std::wstring MenuItemEvent::GetDescription() const
 	switch (m_finalAction)
 	{
 	case finalActionRemove:
-		result += L" (remove event)";
+		result += L" [remove event]";
 		break;
 
 	case finalActionDisable:
-		result += L" (disable event)";
+		result += L" [disable event]";
 		break;
 
 	case finalActionReenable:
-		result += L" (re-enable event)";
+		result += L" [re-enable event]";
 		break;
 	}
 
